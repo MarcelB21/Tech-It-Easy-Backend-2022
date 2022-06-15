@@ -1,8 +1,11 @@
 package nl.novi.backend.spring.techiteasyhomework.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 public class Television {
@@ -50,6 +53,18 @@ public class Television {
         this.originalStock = originalStock;
         this.sold = sold;
     }
+
+    @OneToOne
+    RemoteController remoteController;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ci_module_id")
+    private CIModule ciModule;
+
+    @OneToMany(mappedBy = "television")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonIgnore
+    Collection<TelevisionWallBracket> televisionWallBrackets;
 
     public Long getId() {
         return id;
@@ -185,5 +200,19 @@ public class Television {
 
     public void setSold(Integer sold) {
         this.sold = sold;
+    }
+
+    public CIModule getCiModule() {
+        return ciModule;
+    }
+
+    public RemoteController getRemoteController() {
+        return remoteController;
+    }
+
+    public void setRemoteController(RemoteController remoteController) {
+    }
+
+    public void setCiModule(CIModule ciModule) {
     }
 }
